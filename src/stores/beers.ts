@@ -7,21 +7,26 @@ const URL = import.meta.env.VITE_PUNKAPI_URL;
 export const useBeersStore = defineStore('beers', {
   state: () => ({
     beers: [] as Beer[],
+    pageNumber: 1,
     loading: false,
+    loadingMore: false,
     error: null as Error | null
   }),
 
   actions: {
     async fetchBeers(): Promise<void> {
-      this.loading = true;
+      this.pageNumber === 1 ? (this.loading = true) : (this.loadingMore = true);
       try {
-        console.log('fetching beers');
-        const response = await axios.get(URL + '?per_page=10');
-        this.beers = response.data;
+        console.log('fetching beers 🍺');
+        const response = await axios.get(`${URL}?per_page=10&page=${this.pageNumber}`);
+        this.beers.push(...response.data);
       } catch (error) {
         this.error = error as Error;
+        // in case of error in the first call
+        if (this.pageNumber > 1) this.pageNumber--;
       } finally {
         this.loading = false;
+        this.loadingMore = false;
       }
     }
   }
