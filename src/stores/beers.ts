@@ -12,7 +12,7 @@ export const useBeersStore = defineStore('beers', {
   }),
 
   actions: {
-    async fetchBeers(): Promise<any> {
+    async fetchBeers(): Promise<void> {
       this.loading = true;
       try {
         console.log('fetching beers');
