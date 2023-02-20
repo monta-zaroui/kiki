@@ -5,7 +5,7 @@
         <h1 class="font-bold text-blue-600 text-9xl">Oops!</h1>
         <p class="mt-5 text-2xl font-bold text-center text-gray-800 md:text-3xl">An error occurred</p>
       </div>
-      <img src="src/assets/beer.jpg" alt="img" class="object-cover w-full h-full" />
+      <img src="@/assets/beer.jpg" alt="img" class="object-cover w-full h-full" />
     </div>
   </div>
 </template>
