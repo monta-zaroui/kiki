@@ -9,6 +9,7 @@
 
   <template v-else>
     <div ref="scrollComponent">
+      <RouterLink to="/beer/11"> (test) Go to Beer 11</RouterLink>
       <BaseCard v-for="beer in beers" :key="beer.id" :beer="beer" />
       <BaseSpinner v-if="loadingMore" />
     </div>
@@ -28,7 +29,6 @@ const { beers, loading, loadingMore, error } = storeToRefs(beersStore);
 const scrollComponent = ref(null);
 
 onMounted(() => {
-  beersStore.fetchBeers();
   window.addEventListener('scroll', handleInfiniteScroll);
 });
 
@@ -43,13 +43,11 @@ function onLoadMore() {
 }
 
 const handleInfiniteScroll = () => {
-  let element = scrollComponent.value;
+  const element: any = scrollComponent.value;
   if (element.getBoundingClientRect().bottom < window.innerHeight) {
     onLoadMore();
   }
 };
-
-
 </script>
 
 <style scoped></style>

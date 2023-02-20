@@ -1,8 +1,15 @@
 <script setup lang="ts">
-import BeersOverview from '@/components/BeersOverview.vue';</script>
+import { RouterView } from 'vue-router';
+import { useBeersStore } from '@/stores/beers';
+import { onMounted } from 'vue';
+
+const beersStore = useBeersStore();
+
+onMounted(() => beersStore.fetchBeers());
+</script>
 
 <template>
-  <BeersOverview />
+  <RouterView />
 </template>
 
 <style scoped></style>
