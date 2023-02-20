@@ -28,6 +28,20 @@ export const useBeersStore = defineStore('beers', {
         this.loading = false;
         this.loadingMore = false;
       }
+    },
+    async addBeer(beerId: number): Promise<void> {
+      const beer = this.beers.find((beer) => beer.id === beerId);
+      if (beer) return;
+      this.loading = true;
+      try {
+        console.log('fetching beer 🍺');
+        const response = await axios.get(`${URL}/${beerId}`);
+        this.beers.push(...response.data);
+      } catch (error) {
+        this.error = error as Error;
+      } finally {
+        this.loading = false;
+      }
     }
   }
 });
