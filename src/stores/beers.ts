@@ -31,8 +31,12 @@ export const useBeersStore = defineStore('beers', {
       }
     },
     async fetchBeer(beerId: number): Promise<void> {
+      if (beerId === this.beer?.id) return;
       const beer = this.beers.find((beer) => beer.id === beerId);
-      if (beer) this.beer = beer;
+      if (beer) {
+        this.beer = beer;
+        return;
+      }
       this.loading = true;
       try {
         console.log('fetching beer 🍺');
