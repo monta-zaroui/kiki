@@ -7,6 +7,7 @@ const URL = import.meta.env.VITE_PUNKAPI_URL;
 export const useBeersStore = defineStore('beers', {
   state: () => ({
     beers: [] as Beer[],
+    beer: null as Beer | null,
     pageNumber: 1,
     loading: false,
     loadingMore: false,
@@ -17,8 +18,8 @@ export const useBeersStore = defineStore('beers', {
     async fetchBeers(): Promise<void> {
       this.pageNumber === 1 ? (this.loading = true) : (this.loadingMore = true);
       try {
-        console.log('fetching beers 🍺');
-        const response = await axios.get(`${URL}?per_page=10&page=${this.pageNumber}`);
+        console.log('fetching beers 🍻');
+        const response = await axios.get<Beer[]>(`${URL}?per_page=10&page=${this.pageNumber}`);
         this.beers.push(...response.data);
       } catch (error) {
         this.error = error as Error;
@@ -29,14 +30,14 @@ export const useBeersStore = defineStore('beers', {
         this.loadingMore = false;
       }
     },
-    async addBeer(beerId: number): Promise<void> {
+    async fetchBeer(beerId: number): Promise<void> {
       const beer = this.beers.find((beer) => beer.id === beerId);
-      if (beer) return;
+      if (beer) this.beer = beer;
       this.loading = true;
       try {
         console.log('fetching beer 🍺');
-        const response = await axios.get(`${URL}/${beerId}`);
-        this.beers.push(...response.data);
+        const response = await axios.get<Beer[]>(`${URL}/${beerId}`);
+        this.beer = response.data[0];
       } catch (error) {
         this.error = error as Error;
       } finally {

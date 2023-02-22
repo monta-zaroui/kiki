@@ -18,10 +18,8 @@ const router = createRouter({
       props: true,
       beforeEnter: async (to, from, next) => {
         const beerStore = useBeersStore();
-        await beerStore.addBeer(Number(to.params.id));
+        await beerStore.fetchBeer(Number(to.params.id));
         if (beerStore.error) next({ name: 'notFound' });
-        console.log('beerStore.beers', beerStore.beers.length);
-        console.log(beerStore.beers);
         next();
       }
     },
