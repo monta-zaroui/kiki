@@ -17,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue';
-import { useBeersStore } from '@/stores/beers';
+import { onBeforeMount, onMounted, onUnmounted, ref } from 'vue';
+import { useBeersStore } from '../stores/beers';
 import { storeToRefs } from 'pinia';
 import BaseSpinner from '@/components/base/BaseSpinner.vue';
 import BaseError from '@/components/base/BaseError.vue';
@@ -27,6 +27,8 @@ import BaseCard from '@/components/base/BaseCard.vue';
 const beersStore = useBeersStore();
 const { beers, loading, loadingMore, error } = storeToRefs(beersStore);
 const scrollComponent = ref(null);
+
+onBeforeMount(() => beersStore.fetchBeers());
 
 onMounted(() => {
   window.addEventListener('scroll', handleInfiniteScroll);
