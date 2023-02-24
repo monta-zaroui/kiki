@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import type { User } from '@/models/user.model';
 
-const URL = import.meta.env.VITE_BACKEND_URL;
+const URL = import.meta.env.VITE_BACKEND_URL + '/users';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -12,17 +12,14 @@ export const useAuthStore = defineStore('auth', {
     error: null as Error | null
   }),
 
-  getters: {
-    isAuthenticated: (state) => !!state.token
-  },
-
   actions: {
     async signIn(email: string, password: string): Promise<void> {
       try {
-        const response = await axios.post(`${URL}/user/signIn`, { email, password });
+        const response = await axios.post(`${URL}/login`, { email, password });
         if (response.data.token) {
           this.user = response.data.user;
           this.token = response.data.token;
+          this.isAuthenticated = true;
           localStorage.setItem('token', response.data.token);
         }
       } catch (error) {
@@ -32,7 +29,7 @@ export const useAuthStore = defineStore('auth', {
 
     async signUp(username: string, email: string, password: string): Promise<void> {
       try {
-        await axios.post(`${URL}/user/signUp`, { username, email, password });
+        await axios.post(`${URL}/users/create`, { username, email, password });
       } catch (error) {
         this.error = error as Error;
       }
@@ -41,6 +38,7 @@ export const useAuthStore = defineStore('auth', {
     async signOut(): Promise<void> {
       this.user = null;
       this.token = null;
+      this.isAuthenticated = false;
       localStorage.removeItem('token');
     },
 
@@ -48,7 +46,7 @@ export const useAuthStore = defineStore('auth', {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await axios.get(`${URL}/user`, {
+          const response = await axios.get(`${URL}/token`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
