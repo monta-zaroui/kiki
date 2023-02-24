@@ -18,7 +18,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue';
 import type { Beer } from '@/models/beer.model';
 
 const props = defineProps<{
