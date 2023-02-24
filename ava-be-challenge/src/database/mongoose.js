@@ -14,4 +14,11 @@ const openMongooseConnection = async () => {
     .catch((err) => console.log(err));
 };
 
-export { openMongooseConnection };
+const openMongooseTestConnection = async () => {
+  mongoose
+    .connect(process.env.DB_TEST_URL, { useUnifiedTopology: true, useNewUrlParser: true })
+
+    .catch((err) => console.log(err));
+};
+
+export { openMongooseConnection, openMongooseTestConnection };
