@@ -97,3 +97,5 @@ router.post('/login', async (req, res) => {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error);
   }
 });
+
+export default router;
