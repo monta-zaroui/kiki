@@ -1,10 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import BeersOverview from '@/components/BeersOverview.vue';
 import { useBeersStore } from '@/stores/beers';
+import SignInOverview from '@/components/base/SignInOverview.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
+    {
+      path: '/signIn',
+      name: 'signIn',
+      component: SignInOverview
+    },
+
     {
       path: '/',
       name: 'beers',
