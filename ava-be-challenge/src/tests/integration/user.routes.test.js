@@ -3,7 +3,6 @@ import chai from 'chai';
 import { before, describe } from 'mocha';
 import { faker } from '@faker-js/faker';
 import initializeChai from '../chai.js';
-import User from '../../models/User.js';
 import { openMongooseTestConnection } from '../../database/mongoose.js';
 import app from '../../app.js';
 
@@ -12,12 +11,11 @@ initializeChai();
 const { expect } = chai;
 chai.config.includeStack = true;
 
-const user = new User({
-  _id: faker.database.mongodbObjectId(),
+const user = {
   username: faker.name.middleName(),
   email: faker.internet.email(),
   password: faker.internet.password()
-});
+};
 
 before(async () => {
   await openMongooseTestConnection();
@@ -32,8 +30,9 @@ describe('User e2e tests', () => {
     expect(res).to.have.status(httpStatus.CREATED);
     expect(res.body).to.be.an('object');
     expect(res.body.username).to.equal(user.username);
-    expect(res.body.email).to.equal(user.email);
+    expect(res.body.email).to.equal(user.email.trim().toLowerCase());
     expect(res.body.password).to.not.equal(user.password);
+    user._id = res.body._id;
   });
 
   /**
@@ -53,7 +52,7 @@ describe('User e2e tests', () => {
     expect(res).to.have.status(httpStatus.OK);
     expect(res.body).to.be.an('object');
     expect(res.body.username).to.equal(user.username);
-    expect(res.body.email).to.equal(user.email);
+    expect(res.body.email).to.equal(user.email.trim().toLowerCase());
   });
 
   /**
@@ -68,5 +67,16 @@ describe('User e2e tests', () => {
     expect(res.body).to.be.an('object');
     expect(res.body.token).to.be.a('string');
     expect(res.body.user).to.be.an('object');
+  });
+
+  /**
+   * Test the DELETE /users/:id route
+   */
+  it('should delete a user', async () => {
+    const res = await chai.request(app).delete(`/users/${user._id}`);
+    expect(res).to.have.status(httpStatus.OK);
+    expect(res.body).to.be.an('object');
+    expect(res.body.username).to.equal(user.username);
+    expect(res.body.email).to.equal(user.email.trim().toLowerCase());
   });
 });
