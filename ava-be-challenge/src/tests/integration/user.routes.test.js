@@ -1,0 +1,72 @@
+import httpStatus from 'http-status';
+import chai from 'chai';
+import { before, describe } from 'mocha';
+import { faker } from '@faker-js/faker';
+import initializeChai from '../chai.js';
+import User from '../../models/User.js';
+import { openMongooseTestConnection } from '../../database/mongoose.js';
+import app from '../../app.js';
+
+initializeChai();
+
+const { expect } = chai;
+chai.config.includeStack = true;
+
+const user = new User({
+  _id: faker.database.mongodbObjectId(),
+  username: faker.name.middleName(),
+  email: faker.internet.email(),
+  password: faker.internet.password()
+});
+
+before(async () => {
+  await openMongooseTestConnection();
+});
+
+describe('User e2e tests', () => {
+  /**
+   * Test the POST /users route
+   */
+  it('should create a new user', async () => {
+    const res = await chai.request(app).post('/users').send(user);
+    expect(res).to.have.status(httpStatus.CREATED);
+    expect(res.body).to.be.an('object');
+    expect(res.body.username).to.equal(user.username);
+    expect(res.body.email).to.equal(user.email);
+    expect(res.body.password).to.not.equal(user.password);
+  });
+
+  /**
+   * Test the GET /users route
+   */
+  it('should get all users', async () => {
+    const res = await chai.request(app).get('/users');
+    expect(res).to.have.status(httpStatus.OK);
+    expect(res.body).to.be.an('array');
+  });
+
+  /**
+   * Test the GET /users/:id route
+   */
+  it('should get one user', async () => {
+    const res = await chai.request(app).get(`/users/${user._id}`);
+    expect(res).to.have.status(httpStatus.OK);
+    expect(res.body).to.be.an('object');
+    expect(res.body.username).to.equal(user.username);
+    expect(res.body.email).to.equal(user.email);
+  });
+
+  /**
+   * Test the POST /users/login route
+   */
+  it('should login a user', async () => {
+    const res = await chai.request(app).post('/users/login').send({
+      email: user.email,
+      password: user.password
+    });
+    expect(res).to.have.status(httpStatus.OK);
+    expect(res.body).to.be.an('object');
+    expect(res.body.token).to.be.a('string');
+    expect(res.body.user).to.be.an('object');
+  });
+});
