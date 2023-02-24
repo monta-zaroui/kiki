@@ -69,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-import { useBeersStore } from '../stores/beers';
+import { useBeersStore } from '@/stores/beers';
 import { storeToRefs } from 'pinia';
 import BaseSpinner from '@/components/base/BaseSpinner.vue';
 

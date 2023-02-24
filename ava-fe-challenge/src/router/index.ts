@@ -3,6 +3,7 @@ import BeersOverview from '@/components/BeersOverview.vue';
 import { useBeersStore } from '@/stores/beers';
 import SignInOverview from '@/components/SignInOverview.vue';
 import SignUpOverview from '@/components/SignUpOverview.vue';
+import { useAuthStore } from '@/stores/auth';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,15 @@ const router = createRouter({
       component: () => import('@/components/base/BaseError.vue')
     }
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+  if (to.name !== 'signIn' && to.name !== 'signUp' && !authStore.isAuthenticated) {
+    next({ name: 'signIn' });
+  } else {
+    next();
+  }
 });
 
 export default router;
