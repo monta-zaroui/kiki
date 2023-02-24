@@ -2,6 +2,7 @@ import Joi from 'joi';
 import express from 'express';
 import httpStatus from 'http-status';
 import userController from './user.controller.js';
+import auth from '../../middleware/auth.js';
 
 const postSchema = Joi.object({
   username: Joi.string().required(),
@@ -28,6 +29,21 @@ router.get('/', async (req, res) => {
   try {
     const users = await userController.list(req.query.skip || 0, req.query.limit || 50);
     return res.status(httpStatus.OK).json(users);
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error);
+  }
+});
+
+/**
+ * GET /v2/users/token
+ * @summary Get user by token
+ * @param {string} token.query.required - token of user to get
+ * @return {User} 200
+ */
+router.get('/token', [auth], async (req, res) => {
+  try {
+    const user = await userController.get(req.userId);
+    return res.status(httpStatus.OK).json(user);
   } catch (error) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error);
   }
