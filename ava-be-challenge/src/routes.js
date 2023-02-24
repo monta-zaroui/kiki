@@ -1,5 +1,6 @@
 import express from 'express';
 import userRoutes from './modules/user/user.routes.js';
+import beerRoutes from './modules/beer/beer.routes.js';
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.get('/base/healthcheck', (req, res) =>
 );
 
 router.use('/users', userRoutes);
+router.use('/beers', beerRoutes);
 
 export default router;
