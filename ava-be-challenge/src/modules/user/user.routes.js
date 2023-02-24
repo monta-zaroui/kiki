@@ -18,7 +18,7 @@ const loginSchema = Joi.object({
 const router = express.Router();
 
 /**
- * GET /users
+ * GET /v2/users
  * @summary Get a list of users
  * @param {number} skip.query - Number of users to skip
  * @param {number} limit.query - Limit number of users to be returned
@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
 });
 
 /**
- * GET /users/:id
+ * GET /v2/users/:id
  * @summary Get a user by id
  * @param {string} id.path.required - id of user to get
  * @return {User} 200
@@ -49,7 +49,7 @@ router.get('/:id', async (req, res) => {
 });
 
 /**
- * POST /users
+ * POST /v2/users
  * @summary Create a new user
  * @param {User} request.body.required - user to create
  * @return {User} 201
@@ -66,7 +66,7 @@ router.post('/', async (req, res) => {
 });
 
 /**
- * DELETE /users/:id
+ * DELETE v2//users/:id
  * @summary Delete a user by id
  * @param {string} id.path.required - id of user to delete
  * @return {User} 200
@@ -81,7 +81,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 /**
- * POST /users/login
+ * POST v2//users/login
  * @summary Login a user
  * @param {string} email.body.required - email of user to login
  * @param {string} password.body.required - password of user to login
