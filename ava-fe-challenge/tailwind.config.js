@@ -57,5 +57,8 @@ module.exports = {
       ]
     }
   },
-  plugins: []
+  plugins: [
+    // eslint-disable-next-line no-undef
+    require('@tailwindcss/line-clamp')
+  ]
 };
