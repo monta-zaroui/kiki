@@ -7,5 +7,15 @@
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "warn"
-  }
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*.test.js"
+      ],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
 }
