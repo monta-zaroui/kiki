@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import BeersOverview from '@/components/BeersOverview.vue';
 import { useBeersStore } from '@/stores/beers';
 import SignInOverview from '@/components/SignInOverview.vue';
+import SignUpOverview from '@/components/SignUpOverview.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,6 +11,12 @@ const router = createRouter({
       path: '/signIn',
       name: 'signIn',
       component: SignInOverview
+    },
+
+    {
+      path: '/signUp',
+      name: 'signUp',
+      component: SignUpOverview
     },
 
     {
