@@ -6,7 +6,7 @@ const router = express.Router();
 /**
  * GET /v2/base/healthcheck - Check service health
  */
-router.get('/v2/base/healthcheck', (req, res) =>
+router.get('/base/healthcheck', (req, res) =>
   res.json({
     server_time: new Date().toISOString(),
     timezone: new Date().toLocaleString('en-US', { timeZoneName: 'short' }).split(' ').pop(),

@@ -11,5 +11,5 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(compress());
 
-app.use('', routes);
+app.use('/v2', routes);
 export default app;
