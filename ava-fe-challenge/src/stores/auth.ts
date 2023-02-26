@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import type { User } from '@/models/user.model';
 
 const URL = import.meta.env.VITE_BACKEND_URL + '/users';
@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth', {
     user: null as User | null,
     token: localStorage.getItem('token'),
     isAuthenticated: false,
-    error: null as Error | null
+    error: null as AxiosError | null
   }),
 
   actions: {
@@ -23,8 +23,8 @@ export const useAuthStore = defineStore('auth', {
           localStorage.setItem('token', response.data.token);
           return true;
         }
-      } catch (error: any) {
-        this.error = error.response.data;
+      } catch (error) {
+        this.error = error as AxiosError;
         return false;
       }
     },
@@ -56,14 +56,12 @@ export const useAuthStore = defineStore('auth', {
               Authorization: `Bearer ${token}`
             }
           });
-          console.log(response.data);
           this.user = response.data;
           if (this.user) {
             this.isAuthenticated = true;
           }
         } catch (error) {
-          console.log(error);
-          this.error = error as Error;
+          this.error = error as AxiosError;
           this.isAuthenticated = false;
         }
       }

@@ -56,7 +56,6 @@ import { toast } from 'vue3-toastify';
 
 const router = useRouter();
 
-
 const state = reactive({
   email: '',
   password: ''
@@ -81,7 +80,7 @@ const signIn = async () => {
       toast('Welcome 🍻 !', { type: 'success' });
       await router.push('/');
     } else {
-      toast(authStore.error + '😢 !', { type: 'error' });
+      toast(authStore.error?.response?.data + '😢 !', { type: 'error' });
     }
   }
 };

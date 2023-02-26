@@ -52,7 +52,6 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-
 const state = reactive({
   username: '',
   email: '',
@@ -75,8 +74,6 @@ const rules = computed(() => ({
 
 const v$ = useValidate(rules, state);
 
-
-
 const signUp = async () => {
   const validate = await v$.value.$validate();
   if (validate) {
@@ -86,7 +83,7 @@ const signUp = async () => {
       toast('Welcome 🍻 !', { type: 'success' });
       await router.push('/');
     } else {
-      toast(authStore.error + '😢 !', { type: 'error' });
+      toast(authStore.error?.response?.data + '😢 !', { type: 'error' });
     }
   }
 };
