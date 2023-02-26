@@ -29,11 +29,13 @@ export const useAuthStore = defineStore('auth', {
       }
     },
 
-    async signUp(username: string, email: string, password: string): Promise<void> {
+    async signUp(username: string, email: string, password: string): Promise<boolean | undefined> {
       try {
-        await axios.post(`${URL}/users/create`, { username, email, password });
+        await axios.post(URL, { username, email, password });
+        return await this.signIn(email, password);
       } catch (error) {
         this.error = error as Error;
+        return false;
       }
     },
 

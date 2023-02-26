@@ -10,9 +10,21 @@
             Create a new account
           </h1>
           <div class="space-y-4 md:space-y-6">
-            <BaseInput label="Username" type="text" placeholder="karim7" />
-            <BaseInput label="Email" type="text" placeholder="karim@example.com" />
-            <BaseInput label="Password" type="password" placeholder="••••••••" />
+            <BaseInput v-model="state.username" label="Username" type="text" placeholder="karim7" />
+            <p class="text-red-500 text-sm italic" v-if="v$.username.$error">{{ v$.username.$errors[0].$message }}</p>
+            <BaseInput v-model="state.email" label="Email" type="text" placeholder="karim@example.com" />
+            <p class="text-red-500 text-sm italic" v-if="v$.email.$error">{{ v$.email.$errors[0].$message }}</p>
+            <BaseInput v-model="state.password" label="Password" type="password" placeholder="••••••••" />
+            <p class="text-red-500 text-sm italic" v-if="v$.password.$error">{{ v$.password.$errors[0].$message }}</p>
+            <BaseInput
+              v-model="state.confirmPassword"
+              label="Confirm Password"
+              type="password"
+              placeholder="••••••••"
+            />
+            <p class="text-red-500 text-sm italic" v-if="v$.confirmPassword.$error">
+              {{ v$.confirmPassword.$errors[0].$message }}
+            </p>
             <BaseButton text="Sign Up" @handleClick="signUp" />
             <p class="text-sm font-light text-gray-500 dark:text-gray-400">
               You have an account already?
@@ -31,9 +43,52 @@
 import BaseLogo from '@/components/base/BaseLogo.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 import BaseInput from '@/components/base/BaseInput.vue';
+import { computed, reactive } from 'vue';
+import { email, helpers, minLength, required } from '@vuelidate/validators';
+import useValidate from '@vuelidate/core';
+import { useAuthStore } from '@/stores/auth';
+import { toast } from 'vue3-toastify';
+import { useRouter } from 'vue-router';
 
-const signUp = () => {
-  console.log('sign up');
+const router = useRouter();
+
+
+const state = reactive({
+  username: '',
+  email: '',
+  password: '',
+  confirmPassword: ''
+});
+
+const rules = computed(() => ({
+  username: { required: helpers.withMessage('This field cannot be empty', required) },
+  email: {
+    required: helpers.withMessage('This field cannot be empty', required),
+    email: helpers.withMessage('This field must be a valid email', email)
+  },
+  password: { required: helpers.withMessage('This field cannot be empty', required), minLength: minLength(6) },
+  confirmPassword: {
+    required: helpers.withMessage('This field cannot be empty', required),
+    sameAsPassword: helpers.withMessage('Passwords do not match', (value) => value === state.password)
+  }
+}));
+
+const v$ = useValidate(rules, state);
+
+
+
+const signUp = async () => {
+  const validate = await v$.value.$validate();
+  if (validate) {
+    const authStore = useAuthStore();
+    const signIn = await authStore.signUp(state.username, state.email, state.password);
+    if (signIn) {
+      toast('Welcome 🍻 !', { type: 'success' });
+      await router.push('/');
+    } else {
+      toast('Something went wrong 😢 !', { type: 'error' });
+    }
+  }
 };
 </script>
 
