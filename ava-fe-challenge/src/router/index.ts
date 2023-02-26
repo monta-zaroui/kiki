@@ -11,13 +11,25 @@ const router = createRouter({
     {
       path: '/signIn',
       name: 'signIn',
-      component: SignInOverview
+      component: SignInOverview,
+      beforeEnter: async (to, from, next) => {
+        const authStore = useAuthStore();
+        await authStore.initAuth();
+        if (authStore.isAuthenticated) next({ name: 'beers' });
+        next();
+      }
     },
 
     {
       path: '/signUp',
       name: 'signUp',
-      component: SignUpOverview
+      component: SignUpOverview,
+      beforeEnter: async (to, from, next) => {
+        const authStore = useAuthStore();
+        await authStore.initAuth();
+        if (authStore.isAuthenticated) next({ name: 'beers' });
+        next();
+      }
     },
 
     {
