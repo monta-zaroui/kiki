@@ -4,7 +4,6 @@ import httpStatus from 'http-status';
 import userController from './user.controller.js';
 import auth from '../../middleware/auth.js';
 import User from '../../models/User.js';
-import axios from 'axios';
 
 const postSchema = Joi.object({
   username: Joi.string().required(),
@@ -123,10 +122,8 @@ router.post('/login', async (req, res) => {
  */
 router.get('/beers/favorites', [auth], async (req, res) => {
   try {
-    const user = await User.findById(req.userId);
-    const requests = user.favoriteBeers.map((id) => axios.get(`${URL}/${id}`));
-    const response = await axios.all(requests);
-    return res.status(httpStatus.OK).json(response.map((r) => r.data));
+    const favoriteBeers = await userController.getFavoriteBeers(req, res);
+    return res.status(httpStatus.OK).json(favoriteBeers);
   } catch (error) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
   }

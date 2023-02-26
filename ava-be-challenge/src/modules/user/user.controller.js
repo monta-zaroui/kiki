@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import User from '../../models/User.js';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
+import axios from 'axios';
 
 dotenv.config();
 
@@ -72,24 +73,32 @@ const remove = async (id) => {
  * @returns {User, token}
  */
 const login = async (email, password) => {
-  try {
-    const user = await User.findOne({ email: email.trim().toLowerCase() });
-    if (!user) throw new Error('User not found');
+  const user = await User.findOne({ email: email.trim().toLowerCase() });
+  if (!user) throw new Error('User not found');
 
-    const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!isMatch) throw new Error('Wrong password');
+  if (!isMatch) throw new Error('Wrong password');
 
-    const token = await jwt.sign(
-      {
-        userId: user._id.toString()
-      },
-      process.env.JWT_SECRET
-    );
-    return { user, token };
-  } catch (error) {
-    throw error;
-  }
+  const token = await jwt.sign(
+    {
+      userId: user._id.toString()
+    },
+    process.env.JWT_SECRET
+  );
+  return { user, token };
 };
 
-export default { get, list, create, remove, login };
+/**
+ * Get favorite beers
+ * @param userId
+ * @return {[Beer]}
+ */
+const getFavoriteBeers = async (userId) => {
+  const user = await User.findById(userId);
+  const requests = user.favoriteBeers.map((id) => axios.get(`${URL}/${id}`));
+  const response = await axios.all(requests);
+  return response.map((r) => r.data);
+};
+
+export default { get, list, create, remove, login, getFavoriteBeers };
