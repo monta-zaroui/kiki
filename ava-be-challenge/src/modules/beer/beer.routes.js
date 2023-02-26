@@ -2,6 +2,7 @@ import express from 'express';
 import axios from 'axios';
 import * as dotenv from 'dotenv';
 import auth from '../../middleware/auth.js';
+import httpStatus from 'http-status';
 
 dotenv.config();
 
@@ -14,12 +15,16 @@ const URL = process.env.PUNK_API_URL;
  * @return {[Beer]} 200
  */
 router.get('/', [auth], async (req, res) => {
-  const response = await axios.get(URL, {
-    params: {
-      ...req.query
-    }
-  });
-  return res.status(response.status).json(response.data);
+  try {
+    const response = await axios.get(URL, {
+      params: {
+        ...req.query
+      }
+    });
+    return res.status(response.status).json(response.data);
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
+  }
 });
 
 /**
@@ -29,8 +34,12 @@ router.get('/', [auth], async (req, res) => {
  * @return {Beer} 200
  */
 router.get('/:id', [auth], async (req, res) => {
-  const response = await axios.get(`${URL}/${req.params.id}`);
-  return res.status(response.status).json(response.data);
+  try {
+    const response = await axios.get(`${URL}/${req.params.id}`);
+    return res.status(response.status).json(response.data);
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
+  }
 });
 
 export default router;
