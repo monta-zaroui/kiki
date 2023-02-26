@@ -27,6 +27,7 @@
                   'px-3 py-2 rounded-md text-sm font-medium'
                 ]"
                 :aria-current="item.current ? 'page' : undefined"
+                @click="setActive(item)"
                 >{{ item.name }}</RouterLink
               >
             </div>
@@ -91,6 +92,7 @@
             'block px-3 py-2 rounded-md text-base font-medium'
           ]"
           :aria-current="item.current ? 'page' : undefined"
+          @click="setActive(item)"
           >{{ item.name }}</RouterLink
         >
       </div>
@@ -103,20 +105,36 @@ import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuIt
 import { Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import { onMounted, ref } from 'vue';
+
+interface NavigationItem {
+  name: string;
+  href: string;
+  current: boolean;
+}
 
 const router = useRouter();
+
+const authStore = useAuthStore();
 
 const signOut = () => {
   authStore.signOut();
   router.push('/signIn');
 };
 
-const navigation = [{ name: 'Beers', href: '/', current: true }];
+const navigation = ref([] as NavigationItem[]);
 
-const authStore = useAuthStore();
-if (!authStore.isAuthenticated)
-  navigation.push(
-    { name: 'Sign In', href: '/signIn', current: false },
-    { name: 'Sign Up', href: '/signUp', current: false }
-  );
+onMounted(() => {
+  navigation.value.push({ name: 'Beers', href: '/', current: true });
+  if (!authStore.isAuthenticated)
+    navigation.value.push(
+      { name: 'Sign In', href: '/signIn', current: false },
+      { name: 'Sign Up', href: '/signUp', current: false }
+    );
+});
+
+const setActive = (item: NavigationItem) => {
+  navigation.value.forEach((nav) => (nav.current = false));
+  item.current = true;
+};
 </script>

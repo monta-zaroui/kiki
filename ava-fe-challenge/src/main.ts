@@ -9,12 +9,12 @@ import './assets/main.css';
 import router from '@/router';
 
 const app = createApp(App);
-app.use(Vue3Toasity, {
-  position: 'top-right',
-  autoClose: 3000,
-  multiple: false
-});
-app.use(createPinia());
-app.use(router);
-
-app.mount('#app');
+app
+  .use(Vue3Toasity, {
+    position: 'top-right',
+    autoClose: 3000,
+    multiple: false
+  })
+  .use(createPinia())
+  .use(router)
+  .mount('#app');
