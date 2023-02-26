@@ -30,7 +30,7 @@ router.get('/', async (req, res) => {
     const users = await userController.list(req.query.skip || 0, req.query.limit || 50);
     return res.status(httpStatus.OK).json(users);
   } catch (error) {
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
   }
 });
 
@@ -45,7 +45,7 @@ router.get('/token', [auth], async (req, res) => {
     const user = await userController.get(req.userId);
     return res.status(httpStatus.OK).json(user);
   } catch (error) {
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
   }
 });
 
@@ -60,7 +60,7 @@ router.get('/:id', async (req, res) => {
     const user = await userController.get(req.params.id);
     return res.status(httpStatus.OK).json(user);
   } catch (error) {
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
   }
 });
 
@@ -77,7 +77,7 @@ router.post('/', async (req, res) => {
     const user = await userController.create(req.body);
     return res.status(httpStatus.CREATED).json(user);
   } catch (error) {
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
   }
 });
 
@@ -92,7 +92,7 @@ router.delete('/:id', async (req, res) => {
     const user = await userController.remove(req.params.id);
     return res.status(httpStatus.OK).json(user);
   } catch (error) {
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
   }
 });
 
@@ -110,7 +110,7 @@ router.post('/login', async (req, res) => {
     const user = await userController.login(req.body.email, req.body.password);
     return res.status(httpStatus.OK).json(user);
   } catch (error) {
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
   }
 });
 
