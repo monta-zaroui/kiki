@@ -52,6 +52,7 @@ import { computed, reactive } from 'vue';
 import { email, helpers, minLength, required } from '@vuelidate/validators';
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
 
 const router = useRouter();
 
@@ -77,8 +78,10 @@ const signIn = async () => {
     const authStore = useAuthStore();
     const login = await authStore.signIn(state.email, state.password);
     if (login) {
-      console.log('login success');
+      toast('Welcome 🍻 !', { type: 'success' });
       await router.push('/');
+    } else {
+      toast('Something went wrong 😢 !', { type: 'error' });
     }
   }
 };
