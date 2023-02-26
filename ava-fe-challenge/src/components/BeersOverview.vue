@@ -9,11 +9,12 @@
 
   <template v-else>
     <div class="w-screen p-2 sm:p-4 md:p-6 lg:p-12 flex justify-center">
-      <div ref="scrollComponent" class="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-10">
+      <div ref="scrollComponent" class="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-10">
         <BaseCard
           v-for="(beer, index) in beers"
           :key="beer.id"
           :beer="beer"
+          :index="index"
           :is-image-on-left="isImageOnTheLeft(index)"
           :screen-width="screenWidth"
         />
