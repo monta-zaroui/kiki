@@ -14,7 +14,6 @@ const router = createRouter({
       component: SignInOverview,
       beforeEnter: async (to, from, next) => {
         const authStore = useAuthStore();
-        // await authStore.initAuth();
         if (authStore.isAuthenticated) next({ name: 'beers' });
         console.log('authStore.isAuthenticated', authStore.isAuthenticated);
         next();
@@ -27,7 +26,6 @@ const router = createRouter({
       component: SignUpOverview,
       beforeEnter: async (to, from, next) => {
         const authStore = useAuthStore();
-        // await authStore.initAuth();
         if (authStore.isAuthenticated) next({ name: 'beers' });
         next();
       }
