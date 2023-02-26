@@ -10,8 +10,10 @@
             Sign in to your account
           </h1>
           <div class="space-y-4 md:space-y-6">
-            <BaseInput label="Email" type="text" placeholder="karim@example.com" />
-            <BaseInput label="Password" type="password" placeholder="••••••••" />
+            <BaseInput v-model="state.email" label="Email" type="text" placeholder="karim@example.com" />
+            <p class="text-red-500 text-sm italic" v-if="v$.email.$error">{{ v$.email.$errors[0].$message }}</p>
+            <BaseInput v-model="state.password" label="Password" type="password" placeholder="••••••••" />
+            <p class="text-red-500 text-sm italic" v-if="v$.password.$error">{{ v$.password.$errors[0].$message }}</p>
             <div class="flex items-center justify-between">
               <div class="flex items-start">
                 <div class="flex items-center h-5">
@@ -45,9 +47,30 @@
 import BaseLogo from '@/components/base/BaseLogo.vue';
 import BaseButton from '@/components/base/BaseButton.vue';
 import BaseInput from '@/components/base/BaseInput.vue';
+import useValidate from '@vuelidate/core';
+import { computed, reactive } from 'vue';
+import { email, helpers, minLength, required } from '@vuelidate/validators';
 
-const signIn = () => {
-  console.log('sign in');
+const state = reactive({
+  email: '',
+  password: ''
+});
+
+const rules = computed(() => ({
+  email: {
+    required: helpers.withMessage('This field cannot be empty', required),
+    email: helpers.withMessage('This field must be a valid email', email)
+  },
+  password: { required: helpers.withMessage('This field cannot be empty', required), minLength: minLength(6) }
+}));
+
+const v$ = useValidate(rules, state);
+
+const signIn = async () => {
+  const validate = await v$.value.$validate();
+  if (validate) {
+    console.log('valid form');
+  }
 };
 </script>
 
