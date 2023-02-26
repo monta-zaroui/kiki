@@ -50,6 +50,11 @@ import BaseInput from '@/components/base/BaseInput.vue';
 import useValidate from '@vuelidate/core';
 import { computed, reactive } from 'vue';
 import { email, helpers, minLength, required } from '@vuelidate/validators';
+import { useAuthStore } from '@/stores/auth';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
 
 const state = reactive({
   email: '',
@@ -69,7 +74,12 @@ const v$ = useValidate(rules, state);
 const signIn = async () => {
   const validate = await v$.value.$validate();
   if (validate) {
-    console.log('valid form');
+    const authStore = useAuthStore();
+    const login = await authStore.signIn(state.email, state.password);
+    if (login) {
+      console.log('login success');
+      await router.push('/');
+    }
   }
 };
 </script>
