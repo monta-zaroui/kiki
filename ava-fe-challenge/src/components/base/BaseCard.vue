@@ -1,16 +1,18 @@
 <template>
   <div class="flex">
     <RouterLink :to="'/beer/' + beer.id">
-      <div class="flex rounded-lg shadow-lg w-full p-6 h-80">
+      <div class="flex rounded-lg shadow-lg p-6 h-80">
         <img v-if="displayImageOnLeft" class="h-full w-28 rounded-lg" :src="image_url" :alt="beer.name" />
         <div class="p-4 flex flex-col justify-start">
-          <h5 class="text-gray-900 text-xl font-medium mb-2">{{ beer.name }}</h5>
-          <StarIconSolid
-            v-if="isFavorite(beer.id)"
-            class="h-5 w-5 text-yellow-400 cursor-pointer"
-            @click="setFavorites('remove')"
-          />
-          <StarIconOutline v-else class="h-5 w-5 text-yellow-400 cursor-pointer" @click="setFavorites('add')" />
+          <div class="flex gap-2">
+            <h5 class="text-gray-900 text-xl font-medium mb-2">{{ beer.name }}</h5>
+            <StarIconSolid
+              v-if="isFavorite(beer.id)"
+              class="h-5 w-5 text-yellow-400 cursor-pointer"
+              @click="setFavorites('remove')"
+            />
+            <StarIconOutline v-else class="h-5 w-5 text-yellow-400 cursor-pointer" @click="setFavorites('add')" />
+          </div>
           <p class="text-gray-700 text-base mb-4 line-clamp-3">
             {{ beer.description }}
           </p>
