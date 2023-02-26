@@ -12,11 +12,7 @@ dotenv.config();
  * @returns {User}
  */
 const get = async (id) => {
-  try {
-    return await User.findById(id);
-  } catch (error) {
-    throw error;
-  }
+  return await User.findById(id);
 };
 
 /**
@@ -26,11 +22,7 @@ const get = async (id) => {
  * @returns {User[]}
  */
 const list = async (skip = 0, limit = 50) => {
-  try {
-    return await User.find().skip(+skip).limit(+limit);
-  } catch (error) {
-    throw error;
-  }
+  return await User.find().skip(+skip).limit(+limit);
 };
 
 /**
@@ -43,14 +35,10 @@ const list = async (skip = 0, limit = 50) => {
  * @returns {User}
  */
 const create = async (user) => {
-  try {
-    const savedUser = new User(user);
-    savedUser.email = savedUser.email.trim().toLowerCase();
-    savedUser.password = await bcrypt.hash(user.password, bcrypt.genSaltSync(10));
-    return await savedUser.save();
-  } catch (error) {
-    throw error;
-  }
+  const savedUser = new User(user);
+  savedUser.email = savedUser.email.trim().toLowerCase();
+  savedUser.password = await bcrypt.hash(user.password, bcrypt.genSaltSync(10));
+  return await savedUser.save();
 };
 
 /**
@@ -59,11 +47,7 @@ const create = async (user) => {
  * @returns {User}
  */
 const remove = async (id) => {
-  try {
-    return await User.findByIdAndDelete(id);
-  } catch (error) {
-    throw error;
-  }
+  return await User.findByIdAndDelete(id);
 };
 
 /**
