@@ -65,6 +65,25 @@ export const useAuthStore = defineStore('auth', {
           this.isAuthenticated = false;
         }
       }
+    },
+
+    async updateFavoriteBeers(beerId: number, action: string): Promise<void> {
+      if (this.isAuthenticated)
+        try {
+          if (action === 'add') this.user!.favoriteBeers.push(beerId);
+          else this.user!.favoriteBeers = this.user!.favoriteBeers.filter((id) => id !== beerId);
+          await axios.patch(
+            `${URL}/beers/favorites`,
+            { favoriteBeers: this.user!.favoriteBeers },
+            {
+              headers: {
+                Authorization: `Bearer ${this.token}`
+              }
+            }
+          );
+        } catch (error) {
+          this.error = error as AxiosError;
+        }
     }
   }
 });
