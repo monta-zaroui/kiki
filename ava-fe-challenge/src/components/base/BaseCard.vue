@@ -24,7 +24,7 @@ const props = defineProps<{
   beer: Beer;
 }>();
 
-const image_url = props.beer.image_url || 'src/assets/beer.jpg';
+const image_url = props.beer.image_url || '/src/assets/beer.jpg';
 </script>
 
 <style scoped></style>

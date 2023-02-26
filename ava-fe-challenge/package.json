@@ -14,6 +14,8 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.11",
+    "@heroicons/vue": "^2.0.16",
     "@vuelidate/core": "^2.0.0",
     "@vuelidate/validators": "^2.0.0",
     "axios": "^1.3.3",
@@ -45,7 +47,6 @@
     "tailwindcss": "^3.2.7",
     "typescript": "~4.7.4",
     "vite": "^4.0.0",
-    "vitest": "^0.25.6",
     "vue-tsc": "^1.0.12"
   }
 }
