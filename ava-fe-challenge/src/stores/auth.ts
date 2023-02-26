@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   actions: {
-    async signIn(email: string, password: string): Promise<void> {
+    async signIn(email: string, password: string): Promise<boolean | undefined> {
       try {
         const response = await axios.post(`${URL}/login`, { email, password });
         if (response.data.token) {
@@ -21,9 +21,11 @@ export const useAuthStore = defineStore('auth', {
           this.token = response.data.token;
           this.isAuthenticated = true;
           localStorage.setItem('token', response.data.token);
+          return true;
         }
       } catch (error) {
         this.error = error as Error;
+        return false;
       }
     },
 
@@ -51,9 +53,15 @@ export const useAuthStore = defineStore('auth', {
               Authorization: `Bearer ${token}`
             }
           });
-          this.user = response.data.user;
+          console.log(response.data);
+          this.user = response.data;
+          if (this.user) {
+            this.isAuthenticated = true;
+          }
         } catch (error) {
+          console.log(error);
           this.error = error as Error;
+          this.isAuthenticated = false;
         }
       }
     }
