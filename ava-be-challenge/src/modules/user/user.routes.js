@@ -129,4 +129,19 @@ router.get('/beers/favorites', [auth], async (req, res) => {
   }
 });
 
+/**
+ * PATCH v2/users/beers/favorites
+ * @summary Update list of favorite beers of a user
+ * @param {[number]} favoriteBeers.body.required - list of favorite beers
+ * @return {[User]} 200
+ */
+router.patch('/beers/favorites', [auth], async (req, res) => {
+  try {
+    const user = await userController.updateFavoriteBeers(req, res);
+    return res.status(httpStatus.OK).json(user);
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
+  }
+});
+
 export default router;

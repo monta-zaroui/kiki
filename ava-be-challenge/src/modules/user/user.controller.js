@@ -85,4 +85,16 @@ const getFavoriteBeers = async (userId) => {
   return response.map((r) => r.data);
 };
 
-export default { get, list, create, remove, login, getFavoriteBeers };
+/**
+ * Update favorite beers
+ * @param userId
+ * @param beers
+ * @return {User}
+ */
+const updateFavoriteBeers = async (userId, beers) => {
+  const user = await User.findById(userId);
+  user.favoriteBeers = beers;
+  return await user.save();
+};
+
+export default { get, list, create, remove, login, getFavoriteBeers, updateFavoriteBeers };
