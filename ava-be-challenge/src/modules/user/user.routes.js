@@ -3,6 +3,8 @@ import express from 'express';
 import httpStatus from 'http-status';
 import userController from './user.controller.js';
 import auth from '../../middleware/auth.js';
+import User from '../../models/User.js';
+import axios from 'axios';
 
 const postSchema = Joi.object({
   username: Joi.string().required(),
@@ -82,7 +84,7 @@ router.post('/', async (req, res) => {
 });
 
 /**
- * DELETE v2//users/:id
+ * DELETE v2/users/:id
  * @summary Delete a user by id
  * @param {string} id.path.required - id of user to delete
  * @return {User} 200
@@ -97,7 +99,7 @@ router.delete('/:id', async (req, res) => {
 });
 
 /**
- * POST v2//users/login
+ * POST v2/users/login
  * @summary Login a user
  * @param {string} email.body.required - email of user to login
  * @param {string} password.body.required - password of user to login
@@ -109,6 +111,22 @@ router.post('/login', async (req, res) => {
   try {
     const user = await userController.login(req.body.email, req.body.password);
     return res.status(httpStatus.OK).json(user);
+  } catch (error) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
+  }
+});
+
+/**
+ * GET v2/users/beers/favorites
+ * @summary Get a list of favorite beers of a user
+ * @return {[Beer]} 200
+ */
+router.get('/beers/favorites', [auth], async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    const requests = user.favoriteBeers.map((id) => axios.get(`${URL}/${id}`));
+    const response = await axios.all(requests);
+    return res.status(httpStatus.OK).json(response.map((r) => r.data));
   } catch (error) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
   }
