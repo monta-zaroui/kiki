@@ -38,6 +38,12 @@ const router = createRouter({
     },
 
     {
+      path: '/favorites',
+      name: 'favorites',
+      component: () => import('@/components/FavoritesOverview.vue')
+    },
+
+    {
       path: '/beer/:id',
       name: 'beer',
       component: () => import('@/components/BeerOverview.vue'),
@@ -60,7 +66,11 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
-  if (!authStore.isAuthenticated) await authStore.initAuth();
+  const beerStore = useBeersStore();
+  if (!authStore.isAuthenticated) {
+    await authStore.initAuth();
+    await beerStore.initFavoriteBeers();
+  }
   if (to.name !== 'signIn' && to.name !== 'signUp' && !authStore.isAuthenticated) {
     next({ name: 'signIn' });
   } else {

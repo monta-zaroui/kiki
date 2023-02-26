@@ -6,10 +6,10 @@
         <h5 class="text-gray-900 text-xl font-medium mb-2">{{ beer.name }}</h5>
         <StarIconSolid
           v-if="isFavorite(beer.id)"
-          class="h-5 w-5 text-yellow-400"
-          @click="setFavorites(beer.id, 'remove')"
+          class="h-5 w-5 text-yellow-400 cursor-pointer"
+          @click="setFavorites('remove')"
         />
-        <StarIconOutline v-else class="h-5 w-5 text-yellow-400" @click="setFavorites(beer.id, 'add')" />
+        <StarIconOutline v-else class="h-5 w-5 text-yellow-400 cursor-pointer" @click="setFavorites('add')" />
         <p class="text-gray-700 text-base mb-4 line-clamp-3">
           {{ beer.description }}
         </p>
@@ -54,11 +54,9 @@ const iSSmallScreen = computed((): boolean => {
   return props.screenWidth <= 640;
 });
 
-const isFavorite = (beerId: number) => authStore.user!.favoriteBeers.includes(beerId);
+const isFavorite = (beerId: number) => authStore.user?.favoriteBeers.includes(beerId);
 
-const setFavorites = async (beerId: number, action: string) => {
-  await authStore.updateFavoriteBeers(beerId, action);
-};
+const setFavorites = async (action: string) => await authStore.updateFavoriteBeers(props.beer.id, action);
 </script>
 
 <style scoped></style>

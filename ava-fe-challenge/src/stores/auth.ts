@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import axios, { AxiosError } from 'axios';
 import type { User } from '@/models/user.model';
+import { useBeersStore } from '@/stores/beers';
 
 const URL = import.meta.env.VITE_BACKEND_URL + '/users';
 
@@ -70,8 +71,14 @@ export const useAuthStore = defineStore('auth', {
     async updateFavoriteBeers(beerId: number, action: string): Promise<void> {
       if (this.isAuthenticated)
         try {
-          if (action === 'add') this.user!.favoriteBeers.push(beerId);
-          else this.user!.favoriteBeers = this.user!.favoriteBeers.filter((id) => id !== beerId);
+          const beerStore = useBeersStore();
+          if (action === 'add') {
+            this.user!.favoriteBeers.push(beerId);
+            beerStore.favorites.push(beerStore.beers.find((beer) => beer.id === beerId)!);
+          } else {
+            this.user!.favoriteBeers = this.user!.favoriteBeers.filter((id) => id !== beerId);
+            beerStore.favorites = beerStore.favorites.filter((beer) => beer.id !== beerId);
+          }
           await axios.patch(
             `${URL}/beers/favorites`,
             { favoriteBeers: this.user!.favoriteBeers },
