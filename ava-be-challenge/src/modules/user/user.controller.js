@@ -2,7 +2,6 @@ import bcrypt from 'bcryptjs';
 import User from '../../models/User.js';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
-import axios from 'axios';
 
 dotenv.config();
 
@@ -73,17 +72,6 @@ const login = async (email, password) => {
   return { user, token };
 };
 
-/**
- * Get favorite beers
- * @param userId
- * @return {[Beer]}
- */
-const getFavoriteBeers = async (userId) => {
-  const user = await User.findById(userId);
-  const requests = user.favoriteBeers.map((id) => axios.get(`${URL}/${id}`));
-  const response = await axios.all(requests);
-  return response.map((r) => r.data);
-};
 
 /**
  * Update favorite beers
@@ -97,4 +85,4 @@ const updateFavoriteBeers = async (userId, beers) => {
   return await user.save();
 };
 
-export default { get, list, create, remove, login, getFavoriteBeers, updateFavoriteBeers };
+export default { get, list, create, remove, login, updateFavoriteBeers };

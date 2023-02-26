@@ -115,19 +115,6 @@ router.post('/login', async (req, res) => {
   }
 });
 
-/**
- * GET v2/users/beers/favorites
- * @summary Get a list of favorite beers of a user
- * @return {[Beer]} 200
- */
-router.get('/beers/favorites', [auth], async (req, res) => {
-  try {
-    const favoriteBeers = await userController.getFavoriteBeers(req, res);
-    return res.status(httpStatus.OK).json(favoriteBeers);
-  } catch (error) {
-    return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
-  }
-});
 
 /**
  * PATCH v2/users/beers/favorites
