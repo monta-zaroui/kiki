@@ -137,7 +137,7 @@ router.get('/beers/favorites', [auth], async (req, res) => {
  */
 router.patch('/beers/favorites', [auth], async (req, res) => {
   try {
-    const user = await userController.updateFavoriteBeers(req, res);
+    const user = await userController.updateFavoriteBeers(req.userId, res.body.favoriteBeers);
     return res.status(httpStatus.OK).json(user);
   } catch (error) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).json(error.message);
