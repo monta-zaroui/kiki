@@ -23,8 +23,8 @@ export const useAuthStore = defineStore('auth', {
           localStorage.setItem('token', response.data.token);
           return true;
         }
-      } catch (error) {
-        this.error = error as Error;
+      } catch (error: any) {
+        this.error = error.response.data;
         return false;
       }
     },
@@ -33,8 +33,8 @@ export const useAuthStore = defineStore('auth', {
       try {
         await axios.post(URL, { username, email, password });
         return await this.signIn(email, password);
-      } catch (error) {
-        this.error = error as Error;
+      } catch (error: any) {
+        this.error = error.response.data;
         return false;
       }
     },

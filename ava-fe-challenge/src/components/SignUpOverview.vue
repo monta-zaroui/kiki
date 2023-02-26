@@ -86,7 +86,7 @@ const signUp = async () => {
       toast('Welcome 🍻 !', { type: 'success' });
       await router.push('/');
     } else {
-      toast('Something went wrong 😢 !', { type: 'error' });
+      toast(authStore.error + '😢 !', { type: 'error' });
     }
   }
 };
